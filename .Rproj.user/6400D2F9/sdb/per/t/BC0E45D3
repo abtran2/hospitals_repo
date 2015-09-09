@@ -1,0 +1,16 @@
+{
+    "contents" : "# Creating test dataframe with fake data\na <- c(\"2034\", \"test name 2\",\"100\",\"Jedi\",\"$1 billion\",\"$50 million\",\"$1.05 billion\")\nb <- c(\"2035\", \"test name\", \"1\", \"King President\", \"$282,123,120\", \"$282,123,120\", \"$282,123,120\")\ng <- rbind(a,b)\ncolnames(g) <- c(\"Year\", \"Hospital\", \"Rank\", \"Position Title\", \"Salary\", \"Fringe Benefits\", \"Total\")\n\n# setting directory to one with the csvs of salaries\nfiles_list <- dir(\"~/Documents/Github/hospsalaries\", full.names = TRUE) #creates a list of files\nid <- 1:length(files_list)\n\n# loop to go through all the files\nfor (i in id) {\n  salaries <- read.csv(files_list[i], stringsAsFactors=F)\n\n  #identifying the year and the name of the first hospital\n  year <- salaries[6,1]\n  salaries_name <- salaries[4,1]\n  salaries_name_num <- 1\n  rank <- \"test\"\n\n  #finding the length of the individual spreadsheet\n  sal_length <- 1:nrow(salaries)\n\n  #loop to go through the whole spreadsheet line by line\n  for (i in sal_length) {\n  \n  #new hospital name is identified every time the list cycle starts back at 1\n  if(salaries[i,1] == \"1\"){\n    #hospital name is always 6 rows above the no. 1\n    salaries_name_num <- i-6\n    #bringing in the column information to the right of the rank number\n    salaries_name <- salaries[salaries_name_num,1]\n    rank <- salaries[i,1]\n    title <- salaries[i,2]\n    salary <- salaries[i,4]\n    fringe <- salaries[i,5]\n    total <- salaries[i,6]\n    #building a row \n    h <- c(year, salaries_name, rank, title, salary, fringe, total)\n    #appending the row to the dataframe\n    g <- rbind(g, h)\n    #all other ranks are treated the same. Get the data in columns correspondening to the rank\n  } else if(salaries[i,1]==\"2\" | salaries[i,1] == \"3\" | \n              salaries[i,1] == \"4\"| salaries[i,1] == \"5\" | \n              salaries[i,1] == \"6\" | salaries[i,1] == \"7\" | \n              salaries[i,1] == \"8\" | salaries[i,1] == \"9\" | salaries[i,1] == \"10\"\n    ) {\n    rank <- salaries[i,1]\n    title <- salaries[i,2]\n    salary <- salaries[i,4]\n    fringe <- salaries[i,5]\n    total <- salaries[i,6]\n    h <- c(year, salaries_name, rank, title, salary, fringe, total)\n    g <- rbind (g,h)\n  }\n}  \n}\ndatag <- data.frame(g)\n\n# getting rid of the test rows\ndatag <- datag[-1,]\ndatag <- datag[-1,]\n\n#Cleaning up the data. Getting rid of FISCAL YEAR string so it leaves behind only the year\ndatag$Year <- gsub(\"FISCAL YEAR \", \"\", datag$Year)\nwrite.csv(datag, \"salaries-since-2009-updated.csv\")\n\n",
+    "created" : 1432653133756.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "586673897",
+    "id" : "BC0E45D3",
+    "lastKnownWriteTime" : 1432668681,
+    "path" : "~/Documents/Github/hospitals/salary_cleaner.R",
+    "project_path" : "salary_cleaner.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
